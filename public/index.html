@@ -1,45 +1,16 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cafe Timekeeper</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <title>Cafe Attendance</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>☕ Quản Lý Nhân Sự</h1>
-            <p id="clock">00:00:00</p>
-        </header>
 
-        <div class="card control-panel">
-            <input type="text" id="staffName" placeholder="Nhập tên nhân viên..." autocomplete="off">
-            <div class="buttons">
-                <button id="btnIn" class="btn btn-in">Vào Ca</button>
-                <button id="btnOut" class="btn btn-out">Tan Ca</button>
-            </div>
-            <p id="statusMsg" class="message"></p>
-        </div>
+<h2>Chấm công nhân viên</h2>
 
-        <div class="card history-panel">
-            <h3>Lịch sử hôm nay</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tên</th>
-                        <th>Vào</th>
-                        <th>Ra</th>
-                        <th>Trễ (Phút)</th>
-                        <th>Tổng giờ</th>
-                    </tr>
-                </thead>
-                <tbody id="logTable">
-                    </tbody>
-            </table>
-        </div>
-    </div>
-    <script src="app.js"></script>
+<button onclick="checkIn()">Check In</button>
+<button onclick="checkOut()">Check Out</button>
+
+<script src="app.js"></script>
 </body>
 </html>
