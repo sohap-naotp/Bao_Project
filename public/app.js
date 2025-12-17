@@ -1,34 +1,20 @@
-let user = null;
-const API = "";
-
-function login() {
-  fetch("/login", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      email: email.value,
-      password: pass.value
-    })
-  })
-  .then(r => r.json())
-  .then(d => {
-    user = d;
-    alert("Login OK");
-  });
-}
-
-function checkin() {
+function checkIn() {
   fetch("/checkin", {
     method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ user_id: user.id })
-  }).then(()=>alert("Checked in"));
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      employee_id: 1,
+      shift_id: 1
+    })
+  }).then(res => res.text()).then(alert);
 }
 
-function checkout() {
+function checkOut() {
   fetch("/checkout", {
     method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ user_id: user.id })
-  }).then(()=>alert("Checked out"));
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      employee_id: 1
+    })
+  }).then(res => res.text()).then(alert);
 }

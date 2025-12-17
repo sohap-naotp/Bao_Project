@@ -1,9 +1,12 @@
 body {
-  font-family: sans-serif;
+  font-family: Arial;
+  background: #111;
+  color: white;
   text-align: center;
-  margin-top: 50px;
 }
-input, button {
-  padding: 10px;
-  margin: 5px;
+
+button {
+  padding: 15px;
+  margin: 10px;
+  font-size: 18px;
 }
