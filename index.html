@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Cafe Attendance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <h2>Chấm công quán cafe</h2>
+
+  <input id="email" placeholder="Email"><br><br>
+  <input id="pass" type="password" placeholder="Password"><br><br>
+  <button onclick="login()">Login</button>
+
+  <hr>
+
+  <button onclick="send('checkin')">CHECK IN</button>
+  <button onclick="send('checkout')">CHECK OUT</button>
+
+<script>
+let userId = 0;
+const API = "https://cafe-server.onrender.com";
+
+function login() {
+  fetch(API + "/login", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: email.value,
+      password: pass.value
+    })
+  })
+  .then(r => r.json())
+  .then(d => {
+    userId = d.id;
+    alert("Login thành công");
+  });
+}
+
+function send(type) {
+  fetch(API + "/" + type, {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({user_id: userId})
+  }).then(() => alert(type + " OK"));
+}
+</script>
+</body>
+</html>

@@ -14,15 +14,30 @@ function write(file, data) {
   fs.writeFileSync(file, JSON.stringify(data, null, 2));
 }
 
-// LOGIN
 app.post('/login', (req, res) => {
-  const users = read('users.json');
-  const u = users.find(
-    x => x.email === req.body.email && x.password === req.body.password
-  );
-  if (!u) return res.status(401).send('Sai tài khoản');
-  res.json(u);
+  try {
+    const users = read('users.json');
+
+    const email = req.body?.email;
+    const password = req.body?.password;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Thiếu email hoặc password' });
+    }
+
+    const u = users.find(
+      x => x.email === email && x.password === password
+    );
+
+    if (!u) return res.status(401).json({ error: 'Sai tài khoản' });
+
+    res.json(u);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
+
 
 // CHECK IN
 app.post('/checkin', (req, res) => {
