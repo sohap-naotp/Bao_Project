@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "name": "Nguyen Van A",
+    "email": "test@gmail.com",
+    "password": "123456",
+    "role": "staff",
+    "branch": "CN1",
+    "hourly_rate": 25000
+  }
+]
