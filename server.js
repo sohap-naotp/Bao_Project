@@ -1,39 +1,77 @@
+console.log('SERVER FILE LOADED');
 const express = require('express');
+const fs = require('fs');
 const path = require('path');
+
 const app = express();
-
-
 app.use(express.json());
+
+// 👉 PHỤC VỤ FRONTEND
 app.use(express.static(path.join(__dirname, 'public')));
 
+// FILE DATA
+const USERS_FILE = path.join(__dirname, 'users.json');
+const ATT_FILE = path.join(__dirname, 'attendance.json');
 
-// TEST
-app.get('/', (req, res) => {
-res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-
-// ===== LOGIN =====
-app.post('/login', (req, res) => {
-const { email, password } = req.body;
-if (email === 'test@gmail.com' && password === '123456') {
-return res.json({ id: 1, name: 'Nhan vien test', role: 'staff' });
+function ensureFile(file, data) {
+  if (!fs.existsSync(file)) {
+    fs.writeFileSync(file, JSON.stringify(data, null, 2));
+  }
 }
-res.status(401).json({ error: 'Sai tai khoan' });
+
+ensureFile(USERS_FILE, []);
+ensureFile(ATT_FILE, []);
+
+function read(file) {
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function write(file, data) {
+  fs.writeFileSync(file, JSON.stringify(data, null, 2));
+}
+
+// LOGIN
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  const users = read(USERS_FILE);
+  const user = users.find(u => u.email === email && u.password === password);
+  if (!user) return res.status(401).json({ error: 'Invalid login' });
+  res.json(user);
 });
 
-
-// ===== CHECK IN =====
+// CHECK IN
 app.post('/checkin', (req, res) => {
-res.json({ message: 'Check-in thanh cong' });
+  const { user_id } = req.body;
+  const now = new Date();
+  const data = read(ATT_FILE);
+
+  data.push({
+    user_id,
+    date: now.toISOString().slice(0,10),
+    check_in: now.toTimeString().slice(0,5),
+    check_out: null,
+    total_hours: 0
+  });
+
+  write(ATT_FILE, data);
+  res.send('Checked in');
 });
 
-
-// ===== CHECK OUT =====
+// CHECK OUT
 app.post('/checkout', (req, res) => {
-res.json({ message: 'Check-out thanh cong' });
+  const { user_id } = req.body;
+  const data = read(ATT_FILE);
+  const now = new Date();
+
+  const a = data.find(x => x.user_id == user_id && x.check_out === null);
+  if (!a) return res.send('Not checked in');
+
+  a.check_out = now.toTimeString().slice(0,5);
+  write(ATT_FILE, data);
+  res.send('Checked out');
 });
 
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log('Server running on port', PORT));
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => {
+  console.log('Server running on port', PORT);
+});
