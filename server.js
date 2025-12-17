@@ -1,3 +1,4 @@
+console.log('SERVER FILE LOADED');
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -114,4 +115,8 @@ app.post('/checkout', (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log('Server running on port', PORT);
+});
+
+process.on('uncaughtException', err => {
+  console.error('UNCAUGHT:', err);
 });
