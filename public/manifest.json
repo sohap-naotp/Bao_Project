@@ -1,9 +1,8 @@
 {
-"name": "Cafe Attendance",
-"short_name": "Attendance",
-"start_url": "/",
-"display": "standalone",
-"background_color": "#ffffff",
-"theme_color": "#111111",
-"icons": []
+  "name": "Cafe Attendance",
+  "short_name": "Attendance",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000"
 }

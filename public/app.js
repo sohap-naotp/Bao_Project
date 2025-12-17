@@ -1,37 +1,34 @@
-const API = '';
 let user = null;
+const API = "";
 
-
-async function login() {
-const email = document.getElementById('email').value;
-const password = document.getElementById('password').value;
-
-
-const res = await fetch(API + '/login', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({ email, password })
-});
-
-
-if (!res.ok) return alert('Sai tài khoản');
-user = await res.json();
-
-
-document.getElementById('actions').classList.remove('hidden');
-document.getElementById('hello').innerText = 'Xin chào ' + user.name;
+function login() {
+  fetch("/login", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: email.value,
+      password: pass.value
+    })
+  })
+  .then(r => r.json())
+  .then(d => {
+    user = d;
+    alert("Login OK");
+  });
 }
 
-
-async function checkin() {
-const res = await fetch(API + '/checkin', { method: 'POST' });
-const j = await res.json();
-document.getElementById('msg').innerText = j.message;
+function checkin() {
+  fetch("/checkin", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ user_id: user.id })
+  }).then(()=>alert("Checked in"));
 }
 
-
-async function checkout() {
-const res = await fetch(API + '/checkout', { method: 'POST' });
-const j = await res.json();
-document.getElementById('msg').innerText = j.message;
+function checkout() {
+  fetch("/checkout", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ user_id: user.id })
+  }).then(()=>alert("Checked out"));
 }

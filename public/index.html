@@ -1,29 +1,22 @@
-<!doctype html>
-<html lang="vi">
+<!DOCTYPE html>
+<html>
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Cafe Attendance</title>
-<link rel="manifest" href="/manifest.json" />
-<link rel="stylesheet" href="/style.css" />
+  <meta charset="utf-8">
+  <title>Cafe Attendance</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="card">
-<h2>Đăng nhập</h2>
-<input id="email" placeholder="Email" />
-<input id="password" type="password" placeholder="Mật khẩu" />
-<button onclick="login()">Login</button>
 
+<h2>Cafe Attendance</h2>
 
-<div id="actions" class="hidden">
-<h3 id="hello"></h3>
-<button onclick="checkin()">Check-in</button>
-<button onclick="checkout()">Check-out</button>
-<p id="msg"></p>
-</div>
-</div>
+<input id="email" placeholder="Email"><br>
+<input id="pass" type="password" placeholder="Password"><br>
 
+<button onclick="login()">LOGIN</button>
+<button onclick="checkin()">CHECK IN</button>
+<button onclick="checkout()">CHECK OUT</button>
 
-<script src="/app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>

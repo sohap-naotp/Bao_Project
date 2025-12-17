@@ -1,48 +1,66 @@
 const express = require("express");
-const path = require("path");
 const fs = require("fs");
+const path = require("path");
 
 const app = express();
-const PORT = process.env.PORT || 10000;
-
-/* =======================
-   MIDDLEWARE
-======================= */
 app.use(express.json());
 
-// LOG REQUEST (để thấy Render có nhận request)
-app.use((req, res, next) => {
-  console.log("REQUEST:", req.method, req.url);
-  next();
+// ===== FILE DATA =====
+const USERS = path.join(__dirname, "users.json");
+const ATT = path.join(__dirname, "attendance.json");
+
+if (!fs.existsSync(USERS)) fs.writeFileSync(USERS, "[]");
+if (!fs.existsSync(ATT)) fs.writeFileSync(ATT, "[]");
+
+// ===== TEST =====
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
-// SERVE FRONTEND
-app.use(express.static(path.join(__dirname, "public")));
+// ===== LOGIN =====
+app.post("/login", (req, res) => {
+  const { email, password } = req.body;
+  const users = JSON.parse(fs.readFileSync(USERS));
 
-/* =======================
-   API
-======================= */
-app.get("/api/users", (req, res) => {
-  const users = JSON.parse(fs.readFileSync("users.json"));
-  res.json(users);
+  const u = users.find(x => x.email === email && x.password === password);
+  if (!u) return res.status(401).json({ error: "Login failed" });
+
+  res.json(u);
 });
 
-app.post("/api/attendance", (req, res) => {
-  const data = req.body;
-  fs.writeFileSync("attendance.json", JSON.stringify(data, null, 2));
-  res.json({ status: "ok" });
+// ===== CHECKIN =====
+app.post("/checkin", (req, res) => {
+  const { user_id } = req.body;
+  const data = JSON.parse(fs.readFileSync(ATT));
+  const now = new Date();
+
+  data.push({
+    user_id,
+    date: now.toISOString().slice(0,10),
+    checkin: now.toTimeString().slice(0,5),
+    checkout: null
+  });
+
+  fs.writeFileSync(ATT, JSON.stringify(data, null, 2));
+  res.json({ ok: true });
 });
 
-/* =======================
-   FRONTEND FALLBACK
-======================= */
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+// ===== CHECKOUT =====
+app.post("/checkout", (req, res) => {
+  const { user_id } = req.body;
+  const data = JSON.parse(fs.readFileSync(ATT));
+  const now = new Date();
+
+  const r = data.find(x => x.user_id == user_id && !x.checkout);
+  if (!r) return res.json({ error: "Not checked in" });
+
+  r.checkout = now.toTimeString().slice(0,5);
+  fs.writeFileSync(ATT, JSON.stringify(data, null, 2));
+  res.json({ ok: true });
 });
 
-/* =======================
-   START SERVER
-======================= */
-app.listen(PORT, () => {
-  console.log("Server running on port", PORT);
-});
+// ===== STATIC =====
+app.use(express.static("public"));
+
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => console.log("Server running on", PORT));
