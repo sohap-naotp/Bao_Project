@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "name": "Nguyen Van A",
+    "name": "Nhan Vien Test",
     "email": "test@gmail.com",
     "password": "123456",
     "role": "staff",
